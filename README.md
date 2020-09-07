@@ -7,4 +7,11 @@ Copy and paste the code into the console and then run it. You will be playing th
 
 2) Second, you need to install the Java JDK that actually processes the Java code and converts it into computer code.
 
-I will develop a GUI version of Tic-tac-Toe.
+
+Running the Application:
+1) Open both java files
+2) Run the TicTaeToeRunner file
+3) Follow instructions on the console and enter input in the console
+
+I will develop a GUI version of Tic-tac-Toe in the very near future. I hope this shows I understand many of the fundamental concepts with Java programming.
+
