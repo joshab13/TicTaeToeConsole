@@ -1,19 +1,34 @@
 package Practice123123;
 
+/**
+ * 
+ *
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
 public class TicTacToe {
 	
-	static ArrayList<Integer> playerposition = new ArrayList<Integer>();
 	
-	static ArrayList<Integer> cpuposition = new ArrayList<Integer>();
+	ArrayList<Integer> playerposition = new ArrayList<Integer>();
+	
+	ArrayList<Integer> cpuposition = new ArrayList<Integer>();
 	
 
-	public static void main(String[] args) {
+	public TicTacToe() {
 		
 		//Outline of the game board
 		
@@ -33,6 +48,9 @@ public class TicTacToe {
 	printBoard(IntroBoard);
 	System.out.println("Welcome to Tic-Tac-Toe!");
 	System.out.println("Begin by picking a symbol. X goes 1st and 0 goes second");
+	
+	//playerposition = new ArrayList<Integer>();
+	//cpuposition = new ArrayList<Integer>();
 	
 	Scanner Symbpicker = new Scanner(System.in);
 	
@@ -89,51 +107,63 @@ public class TicTacToe {
 			{'-','+','-','+','-'},
 			{' ','|',' ','|',' '}}; 
 	
-	for (;;) {
+		String result = "";
+	
+	while (result == "") {
 	
 		//New scanner made to receive new input after each turn
 	
 		
+		/*This is where the code runs for each turn between the player and the CPU.
+		 * After each turn, a winner gets determined.  
+		 * 
+		 * 
+		 */
 	if(GoesFirst == "player") {
-		playerTurn(playerpos,Board);
-		cpuTurn(cpupos,playerpos,Board);
+		playerTurn(playerpos,Board,playerchoice);
+		result = evaluateWeen(Board);
+		testResult(result);
 		
-	}
+		if(!(result == "")){
+			break;
+		}
+		
+		
+		cpuTurn(cpupos,playerpos,Board,cpuchoice);
+		result = evaluateWeen(Board);
+		testResult(result);
+		
+		
+			}
+	
 	
 	else if (GoesFirst == "cpu") {
-		cpuTurn(cpupos,playerpos,Board);
-		playerTurn(playerpos,Board);
+		cpuTurn(cpupos,playerpos,Board,cpuchoice);
+		result = evaluateWeen(Board);
+		testResult(result);
 		
-	}
+		
+		if(!(result == "")){
+			break;
+		}
+		
+		playerTurn(playerpos,Board,playerchoice);
+		result = evaluateWeen(Board);
+		testResult(result);
+		
+			}
 		
 	
-	String result = evaluateWeen(Board);
-	
-	System.out.println(result);
-	
-	switch(result) {
-	
-	case "Congratulations you won!":
-		System.exit(1);
-		break;
-		
-	case "You lose. Sorry":
-		System.exit(1);
-		break;
-	
-	case "CAT!":
-		System.exit(1);
-		break;
 	
 		}
 	
-	}
+	
 	
 	
 	}
 		
 		
-	public static void printBoard(char TicTacBoard[][]) {
+	public void printBoard(char TicTacBoard[][]) {
 		
 		//This is how to go through each column
 		for (char x[]:TicTacBoard) {
@@ -151,60 +181,116 @@ public class TicTacToe {
 	}
 	
 	
-	public static void playerTurn(int getplayerpos, char BoardPlayer[][]) {
+	public void playerTurn(int getplayerpos, char BoardPlayer[][], char playersymb) {
+		
+		List <Integer> box = Arrays.asList(1,2,3,4,5,6,7,8,9);
+		boolean running = true;
+		
+		
 		
 		Scanner scanner = new Scanner(System.in); //Create object to receive input
 		
 		
-		System.out.println("Enter a number from 1-9 to place your piece on the respective square:");
-		
-		getplayerpos = scanner.nextInt(); //Reads an integer from user input
-		
-		System.out.println(getplayerpos); //Just used to test output
 		
 		
+		while (running) {
+			
+			
+			try {
+				System.out.println("Enter a number from 1-9 to place your piece on the respective square:");
+				getplayerpos = scanner.nextInt();
 		
-		/*Error checking to ensure player doesn't place their symbol on a square
-		 * that has already been claimed by the player or the AI
-		 */
-		while(playerposition.contains(getplayerpos) || cpuposition.contains(getplayerpos)) {
+			}
+			
+			catch(InputMismatchException e) {
+				System.out.println("Invalid input. Please provide an number in between 1-9.");
+				scanner.nextLine();
+				continue; //Goes back to the while loop and keeps looping until user provides a number
+			}
+		
+			//While number provided is not in between 1-9
+			while(!(box.contains(getplayerpos))) {
+				
+				
+				try {
+					System.out.println("The number provided does not fall in between 1-9. Please enter another number:");
+					getplayerpos = scanner.nextInt();
+					}
+				
+				catch (InputMismatchException e) {
+					System.out.println("Invalid input. Please provide a number in between 1-9.");
+					scanner.nextLine();
+					getplayerpos = 15; /*Essentially a number given outside of condition on purpose
+					so user can input the valid input
+					 */
+					continue;
+					}
+				
+				
+		
+				}
+		
+				
+		
+		if(playerposition.contains(getplayerpos) | cpuposition.contains(getplayerpos)) {
 			
 			printBoard(BoardPlayer);
+			
+			
 			System.out.println("A piece has already been placed there. Try again!:");
-			getplayerpos = scanner.nextInt();
+			//getplayerpos = scanner.nextInt();
+			
+		
+		}
+		
+		/*If the above if returns false, the program exists the entire while loop 
+		 * which means user input validation is complete
+		 */
+		else {
+			running = false;
 			
 		}
+		
+		
+		
+		}
+	
 	
 		
-		placePiece(BoardPlayer,getplayerpos,"player", 'X');
+		
+		placePiece(BoardPlayer,getplayerpos,"player", playersymb);
 		
 	}
 
 	
-	public static void cpuTurn(int cpuselect, int getplayerpos, char BoardCPU[][]) {
+	public void cpuTurn(int cpuselect, int getplayerpos, char BoardCPU[][], char cpusymb) {
+		
+		//starts
 		
 		Random rand = new Random();
 		
 		cpuselect = rand.nextInt(9) + 1;
 		
-		for(;;) {
-			//Keeps running until cpu decision is not equal to the player of the game
-		if (cpuselect == getplayerpos) {
-		
+		while(cpuposition.contains(cpuselect) || playerposition.contains(cpuselect)){
+			
+			
 			cpuselect = rand.nextInt(9) + 1;
 		
-		
+			
+			
 		}
 		
-		break;
-		}
+		//ends
 		
-		placePiece(BoardCPU,cpuselect,"cpu",'O');
+	
+		
+		
+		placePiece(BoardCPU,cpuselect,"cpu",cpusymb);
 		
 	}
 	
 	
-	public static void placePiece(char Board1[][],int num, String user, char symbol) {
+	public void placePiece(char Board1[][],int num, String user, char symbol) {
 	
 		System.out.println("Going into the array:" + num);
 		
@@ -212,12 +298,14 @@ public class TicTacToe {
 			
 			playerposition.add(num);
 			System.out.println("This is what is added for player: " + playerposition);
+			System.out.println("Player board size:" + playerposition.size());
 		}
 		
 		else if(user == "cpu") {
 			
 			cpuposition.add(num);
 			System.out.println("This is what is added for cpu: " + cpuposition);
+			System.out.println("Cpu board size:" + cpuposition.size());
 		}
 		
 		switch(num) {
@@ -264,7 +352,7 @@ public class TicTacToe {
 	}
 	
 	
-	public static String evaluateWeen(char BoardState[][]) {
+	public String evaluateWeen(char BoardState[][]) {
 		
 		
 		List <Integer> toprow = Arrays.asList(1,2,3);
@@ -305,7 +393,7 @@ public class TicTacToe {
 		}
 			
 		else if (playerposition.size() + cpuposition.size() == 9) {
-			return "CAT!";
+			return "A tie! Exciting game!";
 		}
 			
 			
@@ -318,5 +406,35 @@ public class TicTacToe {
 		return "";
 
 }
+	
+	public void testResult(String statement) {
+		
+		System.out.println(statement);
+		
+		switch(statement) {
+		
+		case "Congratulations you won!":
+			//System.exit(1);
+			break;
+			
+		case "You lose. Sorry":
+			//System.exit(1);
+			break;
+		
+		case "A tie! Exciting game!":
+			//System.exit(1);
+			break;
+		
+			}
+		
+		
+	}
+
+	
+	public static void main (String[] args) {
+		
+		TicTacToe t = new TicTacToe();
+		
+	}
 	
 }
