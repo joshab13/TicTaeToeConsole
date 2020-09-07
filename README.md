@@ -13,5 +13,5 @@ Running the Application:
 2) Run the TicTaeToeRunner file
 3) Follow instructions on the console and enter input in the console
 
-I will develop a GUI version of Tic-tac-Toe in the very near future. I hope this shows I understand many of the fundamental concepts with Java programming.
+I will develop a GUI version of Tic-tac-Toe in the very near future. I hope this shows I understand many of the fundamental concepts with Java programming as this code incldues comprehensive error checking and allows the user play with either X or O which determines whether the human player or CPU goes first. I am also looking in the near future to add intelligence to the computer so it doesn't pick by random.
 
